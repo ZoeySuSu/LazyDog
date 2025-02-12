@@ -118,31 +118,46 @@ router.post("/logout", checkToken, (req, res) => {
 
 //驗證使用者是否登入 (Token refresh)
 router.post("/api/users/status", checkToken, (req, res) => {
-  const { id, email } = req.user;
+  const { decoded } = req;
 
-  const token = jwt.sign({ id, email }, secretKey, { expiresIn: "30m" });
-
+  const token = jwt.sign(
+    {
+      id: decoded.id,
+      email: decoded.email,
+    },
+    secretKey,
+    { expiresIn: "30m" }
+  );
   res.json({ status: "success", data: { token }, message: "登入中" });
 });
 
 //  Token 驗證
 function checkToken(req, res, next) {
   let token = req.get("Authorization");
-
   if (!token)
-    return res.status(401).json({ status: "error", message: "未提供 Token" });
-
+    return res.json({
+      status: "error",
+      data: "",
+      message: "無資料",
+    });
+  console.log(token);
   if (!token.startsWith("Bearer "))
-    return res.status(400).json({ status: "error", message: "驗證格式錯誤" });
-
+    return res.json({
+      status: "error",
+      data: "",
+      message: "驗證資料錯誤",
+    });
   token = token.slice(7);
-
-  jwt.verify(token, secretKey, async (err, decoded) => {
-    if (err) {
-      return res
-        .status(401)
-        .json({ status: "error", message: "Token 無效或已過期" });
-    }
+  console.log(token);
+  jwt.verify(token, secretKey, (err, decoded) => {
+    if (err)
+      return res.status(401).json({
+        status: "error",
+        data: "",
+        message: "資料失效",
+      });
+    req.decoded = decoded;
+    console.log(decoded);
 
     next();
   });

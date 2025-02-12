@@ -24,7 +24,7 @@ export default function AppPage({ logout }) {
     }
     try {
       await login(email, password); // 呼叫 useAuth 中的 login 函式
-      router.push("/pages"); // 登入成功後跳轉
+      // router.push("/pages"); // 登入成功後跳轉
     } catch (error) {
       alert("登入失敗，請檢查您的帳號或密碼！");
       console.error(error);
