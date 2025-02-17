@@ -1,12 +1,19 @@
 import pool from "../config/mysql.js";
 
+
+// 獲取全部文章
 export const getArticlesS = async () => {
   try {
     const [articles] = await pool.query(
-      `SELECT articles.*, article_img.url AS cover_image
+      `SELECT articles.*, 
+      article_img.url AS cover_image,
+      users.name AS name,
+      article_type.name AS category_name
        FROM articles 
        LEFT JOIN article_img ON articles.id = article_img.article_id 
-       WHERE articles.is_deleted = 0`
+       LEFT JOIN users ON articles.author_id = users.id
+       LEFT JOIN article_type ON articles.category_id = article_type.id
+       WHERE articles.is_deleted = 0 AND users.is_deleted = 0`
     );
     return articles;
   } catch (error) {
@@ -18,11 +25,23 @@ export const getArticlesS = async () => {
 export const getIdS = async (id) => {
   try {
     const [articles] = await pool.query(
-      `SELECT articles.*, article_img.url AS cover_image
+      `SELECT articles.*, 
+       article_img.url AS cover_image,
+       users.name AS name,
+       article_type.name AS category_name,
+       comment.id AS comment_id,
+       comment.content AS comment_content,
+       comment_users.name AS commenter_name, 
+       comment_users.user_img AS commenter_img
        FROM articles 
        LEFT JOIN article_img ON articles.id = article_img.article_id 
-       WHERE articles.is_deleted = 0 AND articles.id = ?`, [id]
+       LEFT JOIN users ON articles.author_id = users.id
+       LEFT JOIN article_type ON articles.category_id = article_type.id
+       LEFT JOIN comment ON articles.id = comment.article_id 
+       LEFT JOIN users AS comment_users ON comment.user_id = comment_users.id
+       WHERE articles.is_deleted = 0 AND users.is_deleted = 0 AND articles.id = ?`, [id]
     );
+    console.log(articles)
     return articles;
   } catch (error) {
     throw new Error(`找不到 ${id} 文章，文章可能不存在或可能已被刪除：${error.message}`);
@@ -171,9 +190,8 @@ export const updateArticleS = async (updateArticle) => {
 // 刪除文章
 export const deleteArticleS = async (id) => {
   try {
-    console.log(id);
     const [result] = await pool.query(
-      `UPDATE articles SET is_deleted = 1, updated_at = NOW() WHERE id = ? AND is_deleted = 0`,
+      `UPDATE articles SET is_deleted = 1, updated_at = NOW() WHERE id = ? AND is_deleted = 1`,
       [id]
     );
     if (result.affectedRows == 0) {
@@ -188,20 +206,35 @@ export const deleteArticleS = async (id) => {
 
 // 搜尋文章
 export const searchKeywordS = async (keyword) => {
+  console.log("我在server端的try外面")
   try {
-    if (!keyword || keyword.trim() == "") {
+    console.log("我在server端的try李面")
+    if (!keyword|| keyword.trim() == "" ) {
       return { error: "請提供有效的搜尋關鍵字" };
     }
+    console.log("我在server端的try李面的if下面")
     const [articles] = await pool.execute(
-      `SELECT articles.*,article_img.url AS cover_image
+      `SELECT articles.*,
+      article_img.url AS cover_image,
+      users.name AS name,
+      article_type.name AS category_name,
+      comment.id AS comment_id,
+       comment.content AS comment_content,
+       comment_users.name AS commenter_name, 
+       comment_users.user_img AS commenter_img
       FROM articles 
       LEFT JOIN article_img ON articles.id = article_img.article_id 
-      WHERE (title LIKE ? OR content LIKE ?) AND is_deleted = 0`,
-      [`%${keyword}%`, `%${keyword}%`]
+      LEFT JOIN users ON articles.author_id = users.id
+      LEFT JOIN article_type ON articles.category_id = article_type.id
+      LEFT JOIN comment ON articles.id = comment.article_id 
+      LEFT JOIN users AS comment_users ON comment.user_id = comment_users.id
+      WHERE (articles.title LIKE ? OR articles.content LIKE ? OR users.name LIKE ? ) AND articles.is_deleted = 0 AND users.is_deleted = 0`,
+      [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`]
     );
+    // console.log(articles)
     return articles;
   } catch (error) {
-    console.error("搜尋文章時出錯:", error);
+    // console.error("搜尋文章時出錯:", error);
     throw new Error("搜尋文章時出錯：" + error.message);
   }
 }
@@ -220,3 +253,5 @@ export const searchKeywordS = async (keyword) => {
 //     throw new Error("搜尋文章時出錯：" + error.message);
 //   }
 // }
+
+

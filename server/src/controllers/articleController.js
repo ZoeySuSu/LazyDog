@@ -17,15 +17,38 @@ export const getArticles = async (req, res) => {
 
 // 取得指定文章
 export const getId = async (req, res) => {
+    const { id } = req.params;
     try {
-
-        const { id } = req.params;
-        const article = await getIdS(id); // ✅ 改為呼叫 getIdS，避免遞迴
-
-        if (!article || article.length === 0) { // ✅ 檢查陣列長度
-            return res.status(404).json({ error: "找不到文章，文章可能不存在或可能已被刪除" });
+        const results = await getIdS(id)
+        // console.log(results)
+        if (!results || results.length === 0) {
+            return res.status(404).json({ message: "文章不存在" });
         }
+        // 組合資料
+        const article = {
+            id: results[0].id,
+            title: results[0].title,
+            content: results[0].content,
+            cover_image: results[0].cover_image,
+            author_name: results[0].author_name,
+            category_name: results[0].category_name,
+            comments: []
+        };
+        // console.log(article)
 
+        const commentMap = new Map(); // 用 Map 避免重複
+
+        results.forEach(row => {
+            if (row.comment_id && !commentMap.has(row.comment_id)) {
+                commentMap.set(row.comment_id, {
+                    content: row.comment_content,
+                    author: row.commenter_name,
+                    author_img:row.commenter_img
+                });
+            }
+        });
+
+        article.comments = Array.from(commentMap.values());
         res.json(article);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -131,19 +154,70 @@ export const deleteArticle = async (req, res) => {
 };
 
 // 搜尋文章
+// export const searchKeyword = async (req, res) => {
+//     try {
+//         const { keyword } = req.query;
+//         if (!keyword) throw new Error("找不到關鍵字");
+//         const articles = await searchKeywordS(keyword);
+//         if (!articles.length) throw new Error("查無相關文章");
+//         res.status(200).json({
+//             status: "success",
+//             data: articles,
+//             message: `查詢： ${keyword} 成功，共${articles.length}筆資料`,
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// }
+
+
 export const searchKeyword = async (req, res) => {
-    try {
-        const { keyword } = req.query;
-        if (!keyword) throw new Error("找不到關鍵字");
-        const articles = await searchKeywordS(keyword);
-        if (!articles.length) throw new Error("查無相關商品");
-        res.status(200).json({
-            status: "success",
-            data: articles,
-            message: `查詢： ${keyword} 成功，共${articles.length}筆資料`,
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+  const { keyword } = req.query;  // 从请求中获取搜索关键字
+  
+  try {
+    // 调用搜索函数获取文章数据
+    const articles = await searchKeywordS(keyword);
+
+    if (articles.length === 0) {
+      return res.status(404).json({ message: "没有找到相关的文章。" });
     }
-}
+
+    // 使用一个对象来去重文章，文章的 id 作为键
+    const uniqueArticles = {};
+
+    // 遍历所有文章，去除重复的文章
+    articles.forEach(article => {
+      if (!uniqueArticles[article.id]) {
+        // 如果文章没有重复，就加入到 uniqueArticles 对象中
+        uniqueArticles[article.id] = {
+          id: article.id,
+          title: article.title,
+          content: article.content,
+          cover_image: article.cover_image,
+          category_name: article.category_name,
+          comments: []
+        };
+      }
+
+      // 处理文章的评论
+      if (article.comment_id) {
+        // 将评论信息添加到对应文章的评论列表中
+        uniqueArticles[article.id].comments.push({
+          content: article.comment_content,
+          author: article.commenter_name,
+          author_img: article.commenter_img || null,
+        });
+      }
+    });
+
+    // 返回去重后的文章数据
+    const result = Object.values(uniqueArticles);
+
+    return res.status(200).json(result);
+
+  } catch (error) {
+    console.error("搜索文章时出错:", error);
+    return res.status(500).json({ error: "搜索文章时出错：" + error.message });
+  }
+};
 
