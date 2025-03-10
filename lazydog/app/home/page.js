@@ -155,7 +155,7 @@ export default function HomePage(props) {
                     </div>
                     <div className={styles.pdWords}>
                       <p className={styles.p}>{product.name}</p>
-                      <p className={styles.p}>${product.price}</p>
+                      {/* <p className={styles.price}>${product.price}</p> */}
                     </div>
                   </div>
                 );
@@ -198,7 +198,7 @@ export default function HomePage(props) {
         </div>
 
         <div className={styles.brownWave}>
-          <img src="/home/img/brownWaves.png" alt="" />
+          {/* <img src="/home/img/brownWaves.png" alt="" /> */}
         </div>
       </div>
 
@@ -213,7 +213,7 @@ export default function HomePage(props) {
             alt=""
           />
           <h2 className={styles.discountWord}>優惠的折扣</h2>
-          <Link href="#" className={styles.readmoreBtn}>
+          <Link href="/fontcoupon" className={styles.readmoreBtn}>
             Read More
           </Link>
           <div className={styles.circle}>

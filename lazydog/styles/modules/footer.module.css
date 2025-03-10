@@ -39,7 +39,8 @@
     justify-content: space-around;
     align-items: flex-start;
     color: White;
-    margin: 0;
+    margin: 30px 0 0 0;
+    /* padding: 30px 0 0 0; */
     li {
       padding: 35px 10px;
     }
@@ -58,14 +59,15 @@
     margin: 0 0 10px 0;
   }
   .logoPic {
-    width: 60px;
+    width: 70px;
     height: auto;
   }
   .lazydog {
     color: white;
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 30px;
+    font-weight: 700;
     letter-spacing: 3px;
+    padding-bottom: 4px;
   }
   .place {
     display: flex;
@@ -83,11 +85,11 @@
       align-self: stretch;
       .addInfo {
         color: var(--Color-4, #fdfaf5);
-        font-size: 16px;
+        font-size: 16.5px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 550;
         line-height: 28px; /* 170% */
-        letter-spacing: 4px;
+        letter-spacing: 3.5px;
         margin: 10px 0 0 0;
       }
     }
@@ -95,10 +97,10 @@
     .timeInfo {
       color: var(--Color-4, #fdfaf5);
       font-family: "Noto Sans TC";
-      font-size: 14px;
+      font-size: 14.8px;
       font-weight: 400;
-      line-height: 35px; /* 194.444% */
-      letter-spacing: 3.16px;
+      line-height: 28px;
+      letter-spacing: 4px;
       margin: 0;
     }
   }
@@ -116,15 +118,15 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 18px;
+  gap: 17px;
   .clientService {
     padding: 5px 0 15px;
     user-select: none;
     color: var(--Color-4, #fdfaf5);
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 21px;
+    font-weight: 500;
     line-height: 34px; /* 106.25% */
-    letter-spacing: 5px;
+    letter-spacing: 2px;
     margin: 0;
   }
   p {
@@ -132,13 +134,13 @@
   }
   .service {
     color: var(--Color-4, #fdfaf5);
-    font-size: 16px;
+    font-size: 15.5px;
     font-weight: 400;
-    letter-spacing: 2px;
+    letter-spacing: 2.5px;
     padding-left: 1.5px;
     &:hover {
       color: #3b3330;
-      text-shadow: #3b3330 0px 0px 2px;
+      text-shadow: #f5ebe7 0px 0px 5px;
       /* font-weight: bold; */
     }
   }
@@ -156,7 +158,7 @@
   /* margin-block: auto; */
   .footerEmail {
     border: 8px solid #f6ce5b;
-    width: 80%;
+    width: 93%;
     height: 60px;
     border-radius: 100px;
     background: White;
@@ -214,8 +216,113 @@
   color: White;
   text-align: center;
   font-size: 12px;
+  font-weight: 500;
   line-height: 65px;
   letter-spacing: 2px;
   user-select: none;
+  margin: 8px 0 8px 0;
 }
 /* ---------------------------------- */
+
+/* 波浪 */
+.orangeWave {
+  width: 1920px;
+  height: 5000px;
+  border-radius: 10px;
+  box-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
+  background: white;
+  position: relative;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+  transform: rotate(180deg);
+}
+
+.background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  /* line-height: 300px; */
+  /* text-align: center; */
+  /* color: white; */
+  /* font-family: serif; */
+  /* font-size: 30px; */
+}
+
+.wave {
+  background: #f5832b;
+  width: 2120px;
+  height: 2120px;
+  border-radius: 40%;
+  opacity: 0.8;
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  margin-left: -250px;
+  margin-top: -250px;
+  transform-origin: center;
+  animation: drift 7s infinite linear;
+}
+.two {
+  animation: drift 9s infinite linear;
+}
+.three {
+  animation: drift 11s infinite linear;
+  opacity: 0.1;
+}
+/* @keyframes drift {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} */
+
+/* Waves Container */
+.wavesContainer {
+  position: relative;
+  width: 100%;
+  height: 15vh; /* 波浪高度 */
+  min-height: 100px; /* 最小高度 */
+  max-height: 150px; /* 最大高度 */
+  overflow: hidden;
+}
+
+.waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  shape-rendering: auto;
+}
+
+.parallax > use {
+  animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+}
+
+/* 波浪動畫 */
+.parallax > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 7s;
+}
+.parallax > use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+.parallax > use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 13s;
+}
+
+/* 波浪動畫移動效果 */
+@keyframes move-forever {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+}

@@ -444,6 +444,17 @@ body {
         margin-right: 0;
         padding: 0 10px;
       } */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        /* box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); */
+      }
+      &:hover .pdPics {
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* 當圖片被懸停時，增強陰影效果 */
+        transform: scale(1.05); /* 當懸停時圖片輕微放大 */
+      }
+
       @media (max-width: 390px) {
         padding: 0 16px;
       }
@@ -451,9 +462,11 @@ body {
       .pdPics {
         overflow: hidden;
         border-radius: 25px;
-        border: 2px solid #ff9538;
+        border: 2px solid #f5832b;
         width: 100%;
         margin-bottom: 29px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease; /* 動畫過渡 */
 
         .dryfood {
           width: 100%;
@@ -462,13 +475,37 @@ body {
         }
       }
       .p {
+        overflow: hidden;
+        word-wrap: break-word;
+        max-height: 58px;
         color: #84572e;
         text-align: center;
         font-family: "Kosugi Maru";
-        font-size: 1.75rem;
-        font-weight: 400;
+        font-size: 20px;
+        font-weight: 550;
         line-height: normal;
-        letter-spacing: 3.08px;
+        letter-spacing: 0.5px;
+        padding: 0 8px;
+        margin: 21px 0;
+
+        @media (max-width: 390px) {
+          font-size: 1.3rem;
+          letter-spacing: 1.5px;
+          line-height: 15px;
+        }
+      }
+      .price {
+        overflow: hidden;
+        word-wrap: break-word;
+        max-height: 54px;
+        color: #84572e;
+        text-align: center;
+        font-family: "Kosugi Maru";
+        font-size: 29px;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: 1.5px;
+        padding: 0 8px;
         margin: 21px 0;
 
         @media (max-width: 390px) {
@@ -589,6 +626,17 @@ body {
       box-sizing: border-box;
       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
       cursor: pointer;
+      transition: all 0.3s ease;
+      &:hover {
+        transform: scale(1.1); /* 按鈕放大 */
+        background: #f55d0a; /* 當鼠標懸停時，改變背景顏色 */
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3); /* 陰影加強 */
+      }
+      &:active {
+        transform: scale(0.95); /* 按下時縮小按鈕 */
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1); /* 按下時的陰影 */
+      }
+
       @media (max-width: 992px) {
         width: 230px;
         height: 50px;
@@ -616,6 +664,8 @@ body {
       font-size: 36px;
       font-weight: 800;
       line-height: 39px;
+      animation: rotateCircle 5s infinite linear;
+
       @media (max-width: 992px) {
         width: 100px;
         height: 100px;
@@ -627,6 +677,14 @@ body {
         height: 80px;
         font-size: 20px;
       }
+    }
+  }
+  @keyframes rotateCircle {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 
@@ -831,7 +889,7 @@ body {
   position: relative;
   display: grid;
   place-items: center;
-  margin: 120px 0 120px 0;
+  margin: 30px 0 130px 0;
   @media (max-width: 390px) {
     margin: 10px 0 120px 0;
   }
@@ -1118,6 +1176,7 @@ body {
     position: absolute;
     right: 10px;
     bottom: -172px;
+    z-index: 50;
     @media (max-width: 390px) {
       width: 45%;
       right: -6px;
