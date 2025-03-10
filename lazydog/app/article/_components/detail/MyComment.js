@@ -14,12 +14,22 @@ const CommentSection = () => {
     const { id } = useParams();
     const { user, loading: authLoading, } = useAuth();
 
+    if (authLoading) {
+        return <div>加載中...</div>;
+    }
+    
+    if (!user) {
+        return <p className="text-muted">請先登入以發表評論</p>;
+    }
+    
+
     // 設置默認頭像
-    // const defaultAvatar = '/path/to/default-avatar.jpg';
-    const modifiedAvatar = user?.avatar ? user.avatar.replace('/images/', '/') : defaultAvatar;
+    const defaultAvatar = '/path/to/default-avatar.jpg';
+    // const modifiedAvatar = user?.avatar ? user.avatar.replace('/images/', '/') : defaultAvatar;
+    const modifiedAvatar = user?.avatar ? user.avatar.replace('/images/', '/') :'';
     // const modifiedAvatar = user.avatar 
     // console.log(defaultAvatar)
-    console.log(modifiedAvatar)
+    // console.log(modifiedAvatar)
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!commentContent.trim()) {
